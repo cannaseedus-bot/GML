@@ -95,7 +95,27 @@ Non-canonical strings → `infer_relation_from_lexical()` → **RelationCandidat
 | [`khanary_topology.gml`](khanary_topology.gml) | Q3-hypercube, 10 nodes, 15 edges | Semantic adjacency of core cognitive tracks |
 | [`hypercube_Q3.gml`](hypercube_Q3.gml) | Q3 — 8 nodes, 12 edges | 3D geodesic reference topology |
 | [`hypercube_Q4.gml`](hypercube_Q4.gml) | Q4 — 16 nodes, 32 edges | 4D geodesic reference topology |
+| [`ccc_n3.gml`](ccc_n3.gml) | CCC3 — 24 nodes, 36 edges | Cubic-interconnect topology overlay |
+| [`ccc_n4.gml`](ccc_n4.gml) | CCC4 — 64 nodes, 96 edges | Higher-order cubic-interconnect topology overlay |
 | [`sample.gml`](sample.gml) | Directed 3-cycle | Parser smoke test |
+
+---
+
+## CCC4 — Cube-Connected Cycles: Three Architectures
+
+CCC4 is a cubic, undirected interconnect topology: 64 nodes `(x, y)` where `0 ≤ x < 16`, `0 ≤ y < 4`. Edges are cycle edges within each x-cluster (4-cycle) and XOR edges across clusters. `topology_mutable 0` — topology is fixed; only bindings and state vary across architectures.
+
+The same CCC4 graph is instantiated three ways, each with `execution_policy "host_authorized"` and `binding_policy "external"`:
+
+| File | Schema | Node role | Operator | Bindings |
+|------|--------|-----------|----------|---------|
+| [`ccc4-neuron.gml`](ccc4-neuron.gml) | `ccc4.neuron.v1` | `scalar-neuron` | `neuron.activation` (relu) | activations / weights / biases |
+| [`ccc4-tensor.gml`](ccc4-tensor.gml) | `ccc4.tensor.v1` | `tensor-unit` | `tensor.message_pass` (sum → relu) | tensor states / edge_weights / biases |
+| [`ccc4-micronaut.gml`](ccc4-micronaut.gml) | `ccc4.micronaut.v1` | `micronaut` | `micronaut.propose` | inputs / edge_routes / state |
+
+**Authority boundary:** `ccc4-micronaut.gml` nodes carry `authority "proposal_only"` — consistent with FS15. The micronaut proposes over the CCC4 topology; Ch'en verifies, XCFE authorizes, Xul commits.
+
+Node labels use `{4-bit-word}:{cycle-position}` addressing (e.g. `"0011:2"`), matching the Q4 hypercube bit-addressing convention so CCC4 and Q4 overlay IDs align.
 
 ---
 
