@@ -1,0 +1,136 @@
+# GML — Graph Map Language
+
+<img src="kuhul-phase-cycle.png" alt="K'UHUL Phase Cycle — GML is the topology substrate at Sek">
+
+**Repository:** https://github.com/cannaseedus-bot/GML  
+**Clone:** `git clone https://github.com/cannaseedus-bot/GML.git`
+
+```text
+B  =  authoritative discrete topology
+GML ≠ VECTOR  ·  topology-before-coordinates
+ParsedGraph ≠ VerifiedGraph ≠ B
+```
+
+---
+
+## What is GML?
+
+GML is **Graph Map Language** — not graph machine learning.
+
+It is the **topology substrate `B`**: the authoritative discrete graph that K'UHUL fold operations traverse. The *map* in GML names the **anamorphism** (unfold) — the fold map function walks GML edges to generate candidate-continuation structure before the cata (Xul) collapses it back to a committed answer.
+
+In the phase cycle infographic above, GML appears at **Sek (phase 4)** — *Graph Topology Updates* — where the fold extracts n-grams and reinforces graph edges. The fold-map walk is the Q3×C6 product: 3D hypercube topology × C6 phase cycle.
+
+---
+
+## Fold-Map Connection
+
+| Fold algebra term | GML role |
+|-------------------|----------|
+| `B` | Authoritative discrete topology — this is a GML graph |
+| `M_mu` | VECTOR-µ learned geometry *over* B — derived, never authoritative |
+| `unfold` / ana | Walks GML edges; generates fold-candidate structure (Wo→Yax→Sek) |
+| `fold` / cata | Collapses KFOLD/1 phase slices to committed answer (Ch'en→Xul) |
+| `unfold-graph.gml` | Q3×C6 (48 nodes, 120 edges) — phase-aware neighbor map |
+| `khanary_topology.gml` | Q3-hypercube cognitive track adjacency (REASON-µ, ELIZA, MEM-µ, …) |
+
+**Laws:**
+- `topology-before-coordinates` — GML graph shape precedes any learned geometry
+- `GML != VECTOR` — VECTOR-µ learns geometry over B; it cannot redefine B
+- `ParsedGraph ≠ VerifiedGraph ≠ B` — parse → validate → admit are three separate gates
+- `semantic_authority = false` — GML files are topology contracts, not truth certificates
+
+---
+
+## Grammar Layers
+
+| File | Purpose |
+|------|---------|
+| [`gml-1.ebnf`](gml-1.ebnf) | **GML/1** — fold-map interface contract: nodes, edges, relation verbs, WCR weights, phase/epistemic state, overlay IDs, validation grades |
+| [`gml.khanary.ebnf`](gml.khanary.ebnf) | **Khanary full grammar** — all extensions: geodesic coordinates, Minkowski events, tensor bundles, quantum graphs, training gradients, Lorentz boosts, deductive system |
+| [`gml.validator.json`](gml.validator.json) | **Semantic validator** — 50+ checks across structural (V), relation (R), WCR (W), geometry (G), statistical decision (S), differential (D), quantum graph (Q), deductive (L), algebraic (A), hyperbolic event (HE), Lorentz boost (LB), tensor bundle (TB), training gradient (T), entropy (E) layers |
+| [`gml.manifest.json`](gml.manifest.json) | Loader, topology contracts, vector boundary laws, fold graph law bridge, decision theory extensions |
+
+---
+
+## Validation Pipeline
+
+```
+GML text
+  → ParseGML       (gml.khanary.ebnf)      → ParsedGraph    grade: PARSED
+  → ValidateGML    (gml.validator.json)     → VerifiedGraph  grade: VALID
+  → Proposal       (field_dag.cpp)          → Candidate
+  → Ch'en          (assert_and_verify)      → Certificate
+  → XCFE           (dispatch authority)     → Authorization
+  → XulGate        (compare_and_commit)     → B'             grade: ADMITTED
+```
+
+A VerifiedGraph (grade VALID) does not automatically update B.  
+The admission path **Proposal → Ch'en → XCFE → XulGate** is mandatory for topology mutation.
+
+---
+
+## Relation Verbs
+
+Canonical verbs produce **VerifiedRelations** (confidence = 1.0):
+
+```
+@related_to   @delegates_to   @requires    @part_of
+@defines      @is_a           @causes      @contradicts
+@has_part     @has_property   @possesses   @value
+@imports      @calls          @exposes
+```
+
+Non-canonical strings → `infer_relation_from_lexical()` → **RelationCandidate** (confidence < 1.0, must pass Ch'en before use in B).
+
+> **Law:** `Representation → Relevance → Candidate → Verification` — not → Truth
+
+---
+
+## Reference Graphs
+
+| File | Graph | Purpose |
+|------|-------|---------|
+| [`unfold-graph.gml`](unfold-graph.gml) | Q3×C6 — 48 nodes, 120 edges | Phase-aware neighbor map; fold iterations walk this |
+| [`khanary_topology.gml`](khanary_topology.gml) | Q3-hypercube, 10 nodes, 15 edges | Semantic adjacency of core cognitive tracks |
+| [`hypercube_Q3.gml`](hypercube_Q3.gml) | Q3 — 8 nodes, 12 edges | 3D geodesic reference topology |
+| [`hypercube_Q4.gml`](hypercube_Q4.gml) | Q4 — 16 nodes, 32 edges | 4D geodesic reference topology |
+| [`sample.gml`](sample.gml) | Directed 3-cycle | Parser smoke test |
+
+---
+
+## WCR Weights
+
+GML nodes carry K'UHUL WCR scoring fields:
+
+| Field | WCR role | Range | Default |
+|-------|----------|-------|---------|
+| `confidence` | C — epistemic confidence | [0, 1] | 1.0 |
+| `static_weight` | W — structural weight | [0, 1] | 1.0 |
+| `health` | node health | [0, 1] | 1.0 |
+
+Edges carry `weight` (default 1.0) and `loss_cost` (L(θ,a) for decision-theory admissibility checks).
+
+Overlay node IDs are namespaced by file stem: `@node:gml:{stem}:{int_id}`  
+Example: `data/khanary_topology.gml` → `@node:gml:khanary_topology:3`
+
+---
+
+## Cross-References
+
+| Repo | Role |
+|------|------|
+| [micronaut-daemon](https://github.com/cannaseedus-bot/micronaut-daemon) | C++ parser (`src/world/gml_parser.cpp`), field DAG builder (`src/world/field_dag.cpp`), `gml.exe` build target, 70+ `.gml` data files, conformance suite |
+| [KUHUL-ES](https://github.com/cannaseedus-bot/KUHUL-ES) | TypeScript KHL runtime; `grammars/gml-1.ebnf` fold-map interface; KFOLD/1 fold graph that GML topology underlies |
+| [key-grammar-kit](https://github.com/cannaseedus-bot/key-grammar-kit) | ⟁KEY vocabulary (19 keys), field-factory, GML validator, AIML/GML mapping contracts |
+
+---
+
+## Authority Boundary
+
+GML files are topology contracts — `semantic_authority = false` for all GML projections.
+
+- **VECTOR-µ / METRIC-µ / TENSOR-µ** may learn geometry *over* B; they cannot redefine the graph topology.
+- Only an **authorized Xul commit** (Ch'en → XCFE → XulGate) may mutate B.
+- Statistical risk (`loss_cost`, `risk_bound`) constrains projection admissibility only — it cannot verify a relation or commit B.
+- Hyperbolic event geometry (`field_kind = "hyperbolic_event"`) routes candidate continuations only — `topology_authority = false`.
