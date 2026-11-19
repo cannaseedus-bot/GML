@@ -21,6 +21,10 @@ GML is the foundation of that topology. `topology-before-coordinates` is a prima
 
 **The graph is not input to an external algorithm. The graph is the program.**
 
+K'UHUL treats graph topology as a **machine-executable computational space**. Nodes encode operations and state, edges encode relationships and dependencies, and phase-governed traversal transforms that space without requiring any visual rendering.
+
+Coordinate fields (`x`, `y`, `z`) in GML nodes are **projection metadata** — they describe how to render or visualize the topology in some geometric space. They are not the topology. Two graphs with identical edges and operators but different coordinates are the same program. The computational world is the relational structure, not the coordinate space it is embedded in.
+
 ---
 
 ## What is GML?
