@@ -13,6 +13,16 @@ ParsedGraph ≠ VerifiedGraph ≠ B
 
 ---
 
+## What is K'UHUL?
+
+**K'UHUL is a graph-native, phase-governed computational language and runtime.** A K'UHUL program isn't a list of instructions — it's a **constrained topology of possible transformations**. Execution is the phase-governed traversal and resolution of that topology.
+
+GML is the foundation of that topology. `topology-before-coordinates` is a primary law: the graph's relational shape (nodes, typed edges, operator fields) is prior to any vector embedding or geometric arrangement derived from it. The graph defines what transformations are structurally possible. The phase cycle (Pop→Wo→Yax→Sek→Ch'en→Xul) governs how those possibilities are unfolded, verified, and committed.
+
+**The graph is not input to an external algorithm. The graph is the program.**
+
+---
+
 ## What is GML?
 
 GML is **Graph Map Language** — not graph machine learning.
