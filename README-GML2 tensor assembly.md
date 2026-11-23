@@ -56,3 +56,8 @@ Six mandatory GML-declared constraints dispatch to fixed, pure Python predicates
 - Missing rules and unknown predicates fail closed; GML never executes code.
 - Arity counts keyword context parameters (not tensor rank or number of slices).
 - This is not a sandbox, self-hosting GML evaluator, or XCFE admission.
+
+
+## v3.4 shared extension interface
+
+`core/extension.py` loads GML-declared constraints and resolver kinds into an immutable Extension. Each declaration must match a trusted, import-time-frozen predicate and its keyword-only arity. Unknown authority, predicate, scope, or resolver kind fails closed. The tensor registry now declares `resolver [ scheme "gml" kind "whole_graph" ]`. `assemble()` preflights all six required rule names before assembly. Existing tensor field validation remains in `registry.py` for backward compatibility; the extension interface is a reusable validation layer, **not** an AIML implementation or a self-hosted evaluator. The trusted Python predicate implementations are not a sandbox.

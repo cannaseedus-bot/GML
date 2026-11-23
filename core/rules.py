@@ -2,7 +2,8 @@
 No eval, imports from GML, execution dispatch, or mutation of caller state.
 """
 import math
-from registry import RegistryError
+class RegistryError(ValueError): pass
+from types import MappingProxyType
 
 class RuleViolation(ValueError): pass
 
@@ -29,14 +30,14 @@ def complete_coverage(*, coverage_policy, occupied, total):
         raise RuleViolation(f'incomplete coverage: {len(occupied)}/{total}')
 
 # Fixed trusted implementations. Never constructed from a registry expression.
-_PREDICATES = {
+_PREDICATES = MappingProxyType({
     "data_count": data_count,
     "finite_values": finite_values,
     "dtype_match": dtype_match,
     "bounds_check": bounds_check,
     "no_overlap": no_overlap,
     "complete_coverage": complete_coverage,
-}
+})
 
 def predicate_arity(name):
     """Number of keyword-only inputs accepted by a trusted predicate."""
@@ -60,3 +61,8 @@ def dispatch(predicate, **context):
 def check(registry, name, **context):
     """Compatibility facade; every invocation requires a declared rule."""
     return registry.require(name).check(**context)
+
+
+def freeze():
+    """Predicate dispatch is backed by an immutable mapping from import time."""
+    return True

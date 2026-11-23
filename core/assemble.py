@@ -87,6 +87,9 @@ def assemble(doc, docs: Mapping[str,Block], materialize=False):
         raise AssemblyError('assembly must declare gml-tensor/1 tensor_assembly')
     registry=load_registry()
     validate_document(doc,registry)
+    for required in ("data_count","finite_values","dtype_match","bounds_check","no_overlap","complete_coverage"):
+        registry.require(required)
+        registry.extension.require(required)
     gid=graph_identity(doc)
     t=field(doc,'tensor')
     if not isinstance(t,Block): raise AssemblyError('tensor block required')

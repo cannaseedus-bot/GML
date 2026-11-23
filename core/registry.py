@@ -2,6 +2,7 @@
 from pathlib import Path
 from dataclasses import dataclass
 from gml2 import parse, Block
+from extension import load_extension, ExtensionError
 
 class RegistryError(ValueError): pass
 
@@ -23,6 +24,7 @@ class Registry:
     contracts: dict
     fields: dict
     constraints: dict
+    extension: object = None
 
     def require(self, name):
         rule = self.constraints.get(name)
@@ -81,7 +83,13 @@ def load_registry(path=None):
             raise RegistryError(f"constraint {name!r} arity mismatch: declared {arity}, predicate expects {predicate_arity(predicate)}")
         rules[name]=Constraint(name,predicate,arity,scope)
     if set(rules)!=required_rules: raise RegistryError(f'missing constraint declarations: {sorted(required_rules-set(rules))}')
-    return Registry(contracts,fields,rules)
+    try:
+        extension=load_extension(doc)
+    except ExtensionError as exc:
+        raise RegistryError(str(exc)) from exc
+    if extension.schema_id != "gml-tensor/1": raise RegistryError("tensor extension schema mismatch")
+    if extension.resolvers.get("gml") != "whole_graph": raise RegistryError("tensor resolver not declared")
+    return Registry(contracts,fields,rules,extension)
 
 def validate_document(doc,registry):
     contracts,fields,*_=registry

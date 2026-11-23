@@ -2,6 +2,7 @@ graph [
   schema "gml-registry/1"
   graph_id "registry/gml-tensor"
   extension [ schema_id "gml-tensor/1" owner "gml.tensor" ]
+  resolver [ scheme "gml" kind "whole_graph" ]
   contract [ name "tensor_source" required "graph_id" required "tensor" ]
   contract [ name "tensor_assembly" required "graph_id" required "tensor" required "slice" ]
   field [ path "tensor" name "rank" type "integer" required_value 2 required 1 ]
