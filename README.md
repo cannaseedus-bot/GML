@@ -1,3 +1,5 @@
+<img src="" width="250px">
+
 # GML/2 separation package (migration draft)
 
 This package **does not replace** your existing runtime or silently rewrite existing graphs. `legacy/` retains all 14 original files byte-for-byte; `overlays/` keeps domain-specific graphs explicitly classified as overlays. `core/` contains clean, reusable, data-only graph contracts.
