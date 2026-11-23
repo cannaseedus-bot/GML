@@ -2,7 +2,6 @@
 
 # GML/2 separation package (migration draft)
 
-This package **does not replace** your existing runtime or silently rewrite existing graphs. `legacy/` retains all 14 original files byte-for-byte; `overlays/` keeps domain-specific graphs explicitly classified as overlays. `core/` contains clean, reusable, data-only graph contracts.
 
 ## Binding rules
 - `label` is presentation, never a provider lookup key.
@@ -22,4 +21,3 @@ This package **does not replace** your existing runtime or silently rewrite exis
 5. Validate structure, shapes, operator/dataflow contracts, provenance and XCFE admission separately.
 6. Compare structural and semantic hashes before switching consumers; test existing CCC, Q3/Q4, CFPC and wildcard workflows.
 
-`core/` is an architectural prototype, not a claim of compatibility with every existing GML parser. New attributes require a versioned validator and consumer migration.
