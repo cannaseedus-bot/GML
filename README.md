@@ -1,3 +1,5 @@
+<img src="Glowing GML Network Emblem.png" />
+
 # GML/2 native micronaut contracts — implementation starter
 
 GML owns its micronaut capability identifiers (`gml.pattern.lookup`, `gml.vector.rank`, `gml.compose`, `gml.tensor.matmul`). No hardcoded external micronaut name is required. These are **requirements**, not executable implementations.
