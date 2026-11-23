@@ -37,10 +37,18 @@ def load_registry(path=None):
     for (path,name),decl in fields.items():
         if one(decl,'type') not in supported:
             raise RegistryError(f'unsupported registry type: {path}.{name}')
-    return contracts,fields
+    required_rules={'data_count','finite_values','dtype_match','bounds_check','no_overlap','complete_coverage'}
+    rules={}
+    for rule in attrs(doc,'constraint'):
+        name=one(rule,'name'); predicate=one(rule,'predicate'); scope=one(rule,'scope')
+        if name in rules or name not in required_rules or predicate!=name or scope not in ('source','assembly') or one(rule,'authority')!='declaration_only':
+            raise RegistryError(f'invalid constraint declaration: {name}')
+        rules[name]=predicate
+    if set(rules)!=required_rules: raise RegistryError(f'missing constraint declarations: {sorted(required_rules-set(rules))}')
+    return contracts,fields,rules
 
 def validate_document(doc,registry):
-    contracts,fields=registry
+    contracts,fields,*_=registry
     if one(doc,'schema')!='gml-tensor/1': raise RegistryError('schema mismatch')
     contract=one(doc,'contract')
     if contract not in contracts: raise RegistryError('unregistered contract')
