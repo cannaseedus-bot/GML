@@ -1,4 +1,4 @@
-<img src="Glowing GML Network Emblem.png" width="250px">
+<img src="Glowing GML Network Emblem.png" />
 
 # GML/2 separation package (migration draft)
 
