@@ -42,7 +42,7 @@ class Bundle:
                 if one(edge,'source_ref') is not None:
                     for key in ('source_ref','target_ref'):
                         ref=one(edge,key)
-                        node=resolve(ref,self.graphs,expected='node_addressable')
+                        node=resolve(ref,self.graphs,expected='node_addressable',expected_schema='aiml-gml/1')
                         contract=ref.split('://',1)[1].split('/',1)[0]
                         target_gid=ref.split('://',1)[1].split('#',1)[0]
                         if one(self.graphs[target_gid],'contract')!=contract: raise ValueError('AIML URI contract mismatch')
@@ -59,8 +59,8 @@ class Bundle:
             self.rules['template_ordinals'].check(node=node)
         # Category joins resolve pattern and template nodes before capture validation.
         for _,cat in self.nodes('category'):
-            pattern=resolve(one(cat,'pattern_ref'),self.graphs,expected='node_addressable')
-            template=resolve(one(cat,'template_ref'),self.graphs,expected='node_addressable')
+            pattern=resolve(one(cat,'pattern_ref'),self.graphs,expected='node_addressable',expected_schema='aiml-gml/1')
+            template=resolve(one(cat,'template_ref'),self.graphs,expected='node_addressable',expected_schema='aiml-gml/1')
             if one(pattern,'kind')!='pattern' or one(template,'kind')!='template': raise ValueError('invalid category bindings')
             self.rules['template_capture_bounds'].check(node=template,wildcard_count=one(pattern,'wildcard_count'))
         return 'BINDINGS_VALIDATED'

@@ -77,4 +77,7 @@ def load_extension(doc):
 
 def owns_document(extension, doc):
     """Schema ownership gate: other extensions are not ours to validate."""
-    return one(doc, 'schema') == extension.schema_id
+    schema = one(doc, 'schema')
+    if schema is None:
+        raise ExtensionError('document has no schema')
+    return schema == extension.schema_id

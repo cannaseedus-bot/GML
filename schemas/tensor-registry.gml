@@ -23,7 +23,7 @@ graph [
   field [ path "graph" name "slice" type "block" ]
   field [ path "graph" name "coverage_policy" type "enum" values "complete,sparse" ]
   field [ path "graph" name "overlap_policy" type "enum" values "reject" ]
-  field [ path "data" name "value" type "number" ]
+  field [ path "data" name "value" type "number" repeatable 1 ]
   constraint [ name "data_count" arity 2 scope "source" predicate "data_count" authority "declaration_only" ]
   constraint [ name "finite_values" arity 1 scope "source" predicate "finite_values" authority "declaration_only" ]
   constraint [ name "dtype_match" arity 3 scope "assembly" predicate "dtype_match" authority "declaration_only" ]

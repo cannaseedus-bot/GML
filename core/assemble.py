@@ -78,7 +78,7 @@ def parse_source(doc, registry=None):
 
 def resolve_ref(ref, docs):
     try:
-        return resolve(ref, docs, expected="whole_graph")
+        return resolve(ref, docs, expected="whole_graph", expected_schema="gml-tensor/1")
     except ResolutionError as exc:
         raise AssemblyError(str(exc)) from exc
 

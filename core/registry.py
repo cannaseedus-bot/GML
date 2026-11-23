@@ -72,6 +72,10 @@ def load_registry(path=None):
     for (path,name),decl in fields.items():
         if one(decl,'type') not in supported:
             raise RegistryError(f'unsupported registry type: {path}.{name}')
+    for (path,name),decl in fields.items():
+        repeatable=one(decl,'repeatable',0)
+        if type(repeatable) is not int or repeatable not in (0,1):
+            raise RegistryError(f'invalid repeatable declaration: {path}.{name}')
     required_rules={'data_count','finite_values','dtype_match','bounds_check','no_overlap','complete_coverage'}
     from rules import predicate_arity
     rules={}
@@ -93,6 +97,7 @@ def load_registry(path=None):
 
 def validate_document(doc,registry):
     contracts,fields,*_=registry
+    if one(doc,'schema') is None: raise RegistryError('document has no schema')
     if one(doc,'schema')!='gml-tensor/1': raise RegistryError('schema mismatch')
     contract=one(doc,'contract')
     if contract not in contracts: raise RegistryError('unregistered contract')
@@ -102,13 +107,13 @@ def validate_document(doc,registry):
     graph_allowed={name for (path,name) in fields if path=='graph'}
     for a in doc.entries:
         if a.name not in graph_allowed:
-            raise RegistryError(f'unregistered field: graph.{a.name}')
+            raise RegistryError(f'unregistered field at graph level: graph.{a.name}')
     for name in graph_allowed:
         decl=fields[('graph',name)]
         vals=attrs(doc,name)
         if one(decl,'required',0)==1 and len(vals)!=1:
             raise RegistryError(f'graph.{name} required once')
-        if name not in ('slice',) and len(vals)>1:
+        if len(vals)>1 and not (one(decl,'repeatable',0)==1 or name=='slice'):
             raise RegistryError(f'graph.{name} duplicate')
         for v in vals:
             typ=one(decl,'type')
@@ -129,7 +134,7 @@ def validate_document(doc,registry):
             if fpath!=path: continue
             vals=attrs(b,name)
             if one(decl,'required',0)==1 and len(vals)!=1: raise RegistryError(f'{path}.{name} required once')
-            if len(vals)>1 and not (path=='data' and name=='value'): raise RegistryError(f'{path}.{name} duplicate')
+            if len(vals)>1 and one(decl,'repeatable',0)!=1: raise RegistryError(f'{path}.{name} duplicate')
             for v in vals:
                 exact=one(decl,'required_value')
                 if exact is not None and v!=exact: raise RegistryError(f'{path}.{name} required value {exact}')
@@ -150,7 +155,7 @@ def validate_document(doc,registry):
         allowed={name for (fpath,name) in fields if fpath==path}
         for attr in b.entries:
             if attr.name not in allowed:
-                raise RegistryError(f'unregistered field: {path}.{attr.name}')
+                raise RegistryError(f'unregistered field in {path} block: {path}.{attr.name}')
         if path=='tensor':
             sh=one(b,'shape')
             if isinstance(sh,Block):

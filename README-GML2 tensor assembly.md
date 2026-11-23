@@ -78,3 +78,11 @@ Run `python -m unittest discover -s tests -v` from the package root.
 - M2: `tensor-registry.gml` declares graph-level fields and `data.value`; validator rejects unknown graph/data keys, including `vaule`, and validates enum values. Repeated `data.value` entries remain legal.
 - Four regression tests added. Standalone package: `python -m unittest discover -s tests -q` -> 57 tests, OK.
 - This is **not** a patch to `kuhul-phase-engine-v0.1.0` (checkout unavailable). F1-F13, M3-M7, host `base_health`, `extension_summary`, `gml_*`, `-text`, and 67-test host suite were not verified here.
+
+## F14.1 / M2.1 follow-up (standalone)
+- `owns_document` rejects missing schema instead of treating it as foreign.
+- `resolve(..., expected_schema=...)` checks the resolved graph's schema; tensor source references and AIML node/category references supply their respective expected schemas.
+- Registry field `repeatable 1` explicitly permits repeated `data.value`; other fields default to nonrepeatable.
+- Unknown graph-level and data-block fields report their scope.
+- Six additional tests cover missing schema, repeated values, duplicate graph id, cross-schema rejection, same-schema resolution and repeatable declaration.
+- Host checkout not included; no host tests or git changes performed. F14/M2 host merge remains unverified.
