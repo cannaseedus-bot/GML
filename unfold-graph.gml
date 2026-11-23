@@ -1,6 +1,5 @@
 graph [
   directed 0
-  layer "phase"
   comment "G_runtime = Q_3 □ C_6 — product of the semantic hypercube and the K'UHUL phase cycle.
 |V| = 48  (8 semantic addresses × 6 phases)
 deg(v) = 5  (3 semantic + 2 phase neighbors at every vertex)

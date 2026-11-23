@@ -1,7 +1,6 @@
 graph [
     comment "Hypercube Q3 / Folded Q3 — 8 vertices (3-bit binary labels). Semantic edges: 12 (Hamming-1, @related_to). Fold edges: 4 (complement b→b̄, @fold_step). Total: 16. FQ3 is 4-regular, diameter 2."
     directed 0
-    layer "prior"
     id 3
     label "Q3"
     node [

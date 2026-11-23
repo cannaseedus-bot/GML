@@ -1,7 +1,6 @@
 graph [
     comment "Hypercube Q4 — 16 vertices (4-bit binary labels), 32 edges (Hamming distance 1). Undirected, 4-regular. Layout: bit0->x, bit1->y, bit2->z, bit3->diagonal offset."
     directed 0
-    layer "prior"
     id 4
     label "Q4"
     node [ id 0  label "0000" x -1.4  y -1.4  z 0.0 ]

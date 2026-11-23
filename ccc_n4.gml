@@ -1,7 +1,6 @@
 graph [
     comment "Cube-Connected Cycles CCC_4 — 64 nodes (x,y) with 0<=x<16, 0<=y<4. Cubic, undirected, 96 edges. Cycle edges within each x-cluster (4-cycle), XOR edges across clusters."
     directed 0
-    layer "prior"
     id 44
     label "CCC4"
     node [ id 0  label "0000:0" x -1.22 y -1.4   z 0.0 ]

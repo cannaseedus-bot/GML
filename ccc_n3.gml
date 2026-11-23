@@ -1,7 +1,6 @@
 graph [
     comment "Cube-Connected Cycles CCC_3 — 24 nodes (x,y) with 0<=x<8, 0<=y<3. Three edges per node: cycle (x,(y+1)%3), cycle (x,(y-1)%3), and XOR (x^2^y, y). Cubic, undirected, 36 edges total."
     directed 0
-    layer "prior"
     id 33
     label "CCC3"
     node [ id 0  label "000:0" x -0.75  y -1.0   z 0.0 ]
