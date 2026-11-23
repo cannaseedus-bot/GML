@@ -61,3 +61,13 @@ Six mandatory GML-declared constraints dispatch to fixed, pure Python predicates
 ## v3.4 shared extension interface
 
 `core/extension.py` loads GML-declared constraints and resolver kinds into an immutable Extension. Each declaration must match a trusted, import-time-frozen predicate and its keyword-only arity. Unknown authority, predicate, scope, or resolver kind fails closed. The tensor registry now declares `resolver [ scheme "gml" kind "whole_graph" ]`. `assemble()` preflights all six required rule names before assembly. Existing tensor field validation remains in `registry.py` for backward compatibility; the extension interface is a reusable validation layer, **not** an AIML implementation or a self-hosted evaluator. The trusted Python predicate implementations are not a sandbox.
+
+## v3.5 AIML/GML port
+
+Adds `schemas/aiml-registry.gml`, six minimal contract fixture graphs,
+`core/aiml_bundle.py`, and trusted AIML predicates in the immutable startup
+allowlist. Both extensions load in either order: the predicate mapping was
+already immutable at import in v3.4, so a mutable `finalize()` phase is
+**not necessary**. No AIML rendering or SRAI execution is implemented.
+
+Run `python -m unittest discover -s tests -v` from the package root.
