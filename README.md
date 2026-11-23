@@ -1,23 +1,20 @@
-<img src="Glowing GML Network Emblem.png" />
+# GML/2 native micronaut contracts — implementation starter
 
-# GML/2 separation package (migration draft)
+GML owns its micronaut capability identifiers (`gml.pattern.lookup`, `gml.vector.rank`, `gml.compose`, `gml.tensor.matmul`). No hardcoded external micronaut name is required. These are **requirements**, not executable implementations.
 
+## Files
+- `core/gml2.py`: preserved Step 1 GML parser/serializer.
+- `core/validate.py`: read-only structural and host-binding checks.
+- `core/bundle.py`: explicit `aiml://<graph_id>#<node_id>` resolver.
+- `schemas/registry.gml`: bootstrap registry declarations (not yet a fully self-hosting schema validator).
+- `contracts/{pattern,template,category,srai,retrieval,composition}.gml`: AIML/GML examples.
+- `contracts/math.gml`: domain-independent tensor/matmul example.
+- `tests/test_contracts.py`: round-trip, structural, binding and negative tests.
 
-## Binding rules
-- `label` is presentation, never a provider lookup key.
-- `requires` names a capability such as `compute.matmul`, not an assumed micronaut instance.
-- `parameter_ref` and `buffer_role` are declarative references; weights and tensor bytes live outside GML.
-- `cols` specifies feature width; `rank` specifies the number of tensor axes. Shape checking happens before binding/admission.
-- Phase labels are descriptive; a node in Sek cannot authorize execution.
-- `operator`/`opcode` are declarations; host registry resolves them. XCFE verifies capability, shape, provenance, authority, and permitted side effects before dispatch.
-- The authoritative graph B is topology. Coordinates and probabilities are separate geometry/parameter overlays. Preserve original topology hashes for topology-only migrations.
-- Never reinterpret `static_weight` as a universal probability. For n-grams it may be frequency, but general graphs need typed weight semantics, normalization scope and provenance.
+Run `python -m unittest discover -s tests -v` from the package root.
 
-## Migration order
-1. Parse and inventory each original file, keeping node/edge IDs and graph structure.
-2. Classify as core topology, domain overlay, binding manifest, parameter metadata or fixture.
-3. Move provider identities and literal domain tokens to overlays, preserving old files until their consumers migrate.
-4. Bind generic capabilities by contract; fail closed on missing implementations.
-5. Validate structure, shapes, operator/dataflow contracts, provenance and XCFE admission separately.
-6. Compare structural and semantic hashes before switching consumers; test existing CCC, Q3/Q4, CFPC and wildcard workflows.
+## Authority boundaries
+The validator does not execute, dispatch, mutate or admit graphs. Missing host capabilities keep a graph `STRUCTURALLY_VALIDATED` with `missing_capabilities`. XCFE admission and Xul closure are not implemented.
 
+## Remaining work before production
+This starter **does not** implement complete schema-driven field validation, edge-role cardinalities, full template capture bounds across category references, URI percent-encoding/normalization, operator shape unification, recursive SRAI evaluation, or reference AIML round-trip conformance. `gml2.py` is the earlier prototype parser and is not claimed to be a full grammar conformance implementation. The registry is declarative data but not yet a self-hosting registry. No domain-specific word corpora are bundled.
