@@ -73,3 +73,8 @@ def load_extension(doc):
         if not isinstance(scheme,str) or scheme in resolvers: raise ExtensionError(f'{schema_id}: duplicate/invalid resolver')
         resolvers[scheme]=kind
     return Extension(schema_id,constraints,resolvers,owner)
+
+
+def owns_document(extension, doc):
+    """Schema ownership gate: other extensions are not ours to validate."""
+    return one(doc, 'schema') == extension.schema_id

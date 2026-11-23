@@ -68,7 +68,7 @@ def load_registry(path=None):
     if missing: raise RegistryError(f'registry missing field declarations: {sorted(missing)}')
     if set(contracts)!={'tensor_source','tensor_assembly'}: raise RegistryError('incomplete contract registry')
     # Registry is load-bearing: unsupported field types fail at bootstrap.
-    supported={'block','enum','integer','positive_integer','nonnegative_integer','graph_uri'}
+    supported={'block','enum','integer','positive_integer','nonnegative_integer','graph_uri','string','number'}
     for (path,name),decl in fields.items():
         if one(decl,'type') not in supported:
             raise RegistryError(f'unsupported registry type: {path}.{name}')
@@ -98,7 +98,30 @@ def validate_document(doc,registry):
     if contract not in contracts: raise RegistryError('unregistered contract')
     for name in contracts[contract]:
         if not attrs(doc,name): raise RegistryError(f'missing required {name}')
-    blocks=[('tensor',b) for b in attrs(doc,'tensor')]
+    # M2: graph and data declarations are checked against the same registry.
+    graph_allowed={name for (path,name) in fields if path=='graph'}
+    for a in doc.entries:
+        if a.name not in graph_allowed:
+            raise RegistryError(f'unregistered field: graph.{a.name}')
+    for name in graph_allowed:
+        decl=fields[('graph',name)]
+        vals=attrs(doc,name)
+        if one(decl,'required',0)==1 and len(vals)!=1:
+            raise RegistryError(f'graph.{name} required once')
+        if name not in ('slice',) and len(vals)>1:
+            raise RegistryError(f'graph.{name} duplicate')
+        for v in vals:
+            typ=one(decl,'type')
+            if typ=='enum' and v not in one(decl,'values','').split(','):
+                raise RegistryError(f'graph.{name} enum mismatch')
+            if typ=='block' and not isinstance(v,Block):
+                raise RegistryError(f'graph.{name} must be block')
+            if typ=='integer' and type(v)!=int:
+                raise RegistryError(f'graph.{name} integer required')
+            if typ=='string' and not isinstance(v,str):
+                raise RegistryError(f'graph.{name} string required')
+    blocks=[('data',b) for b in attrs(doc,'data')]
+    blocks += [('tensor',b) for b in attrs(doc,'tensor')]
     blocks += [('slice',b) for b in attrs(doc,'slice')]
     for path,b in blocks:
         if not isinstance(b,Block): raise RegistryError(f'{path} must be block')
@@ -106,7 +129,7 @@ def validate_document(doc,registry):
             if fpath!=path: continue
             vals=attrs(b,name)
             if one(decl,'required',0)==1 and len(vals)!=1: raise RegistryError(f'{path}.{name} required once')
-            if len(vals)>1: raise RegistryError(f'{path}.{name} duplicate')
+            if len(vals)>1 and not (path=='data' and name=='value'): raise RegistryError(f'{path}.{name} duplicate')
             for v in vals:
                 exact=one(decl,'required_value')
                 if exact is not None and v!=exact: raise RegistryError(f'{path}.{name} required value {exact}')
@@ -120,6 +143,8 @@ def validate_document(doc,registry):
                 elif typ=='integer' and type(v)!=int: raise RegistryError(f'{path}.{name} integer required')
                 elif typ=='positive_integer' and (type(v)!=int or v<=0): raise RegistryError(f'{path}.{name} positive integer required')
                 elif typ=='nonnegative_integer' and (type(v)!=int or v<0): raise RegistryError(f'{path}.{name} nonnegative integer required')
+                elif typ=='number' and (type(v) not in (int,float)):
+                    raise RegistryError(f'{path}.{name} number required')
                 elif typ=='graph_uri' and (not isinstance(v,str) or not v.startswith('gml://')): raise RegistryError(f'{path}.{name} graph URI required')
         # Reject unregistered extension fields, rather than silently interpreting them.
         allowed={name for (fpath,name) in fields if fpath==path}

@@ -71,3 +71,10 @@ already immutable at import in v3.4, so a mutable `finalize()` phase is
 **not necessary**. No AIML rendering or SRAI execution is implemented.
 
 Run `python -m unittest discover -s tests -v` from the package root.
+
+## Merge ledger patch: F14 + M2 (2026-11-23)
+
+- F14: `extension.owns_document` provides schema ownership; tensor `load_directory` skips validation of other schemas while preserving their documents for domain-specific validators.
+- M2: `tensor-registry.gml` declares graph-level fields and `data.value`; validator rejects unknown graph/data keys, including `vaule`, and validates enum values. Repeated `data.value` entries remain legal.
+- Four regression tests added. Standalone package: `python -m unittest discover -s tests -q` -> 57 tests, OK.
+- This is **not** a patch to `kuhul-phase-engine-v0.1.0` (checkout unavailable). F1-F13, M3-M7, host `base_health`, `extension_summary`, `gml_*`, `-text`, and 67-test host suite were not verified here.

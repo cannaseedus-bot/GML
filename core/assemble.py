@@ -140,6 +140,9 @@ def load_directory(path, registry_path=None):
         docs[gid]=doc
     registry = load_registry(registry_path)
     for gid, doc in docs.items():
+        from extension import owns_document
+        if not owns_document(registry.extension, doc):
+            continue
         validate_document(doc, registry)
         if field(doc,'contract') == 'tensor_source':
             parse_source(doc,registry)
