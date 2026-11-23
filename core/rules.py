@@ -28,11 +28,35 @@ def complete_coverage(*, coverage_policy, occupied, total):
     if coverage_policy=='complete' and len(occupied)!=total:
         raise RuleViolation(f'incomplete coverage: {len(occupied)}/{total}')
 
-PREDICATES={name:obj for name,obj in list(globals().items()) if name in {
-    'data_count','finite_values','dtype_match','bounds_check','no_overlap','complete_coverage'}}
+# Fixed trusted implementations. Never constructed from a registry expression.
+_PREDICATES = {
+    "data_count": data_count,
+    "finite_values": finite_values,
+    "dtype_match": dtype_match,
+    "bounds_check": bounds_check,
+    "no_overlap": no_overlap,
+    "complete_coverage": complete_coverage,
+}
+
+def predicate_arity(name):
+    """Number of keyword-only inputs accepted by a trusted predicate."""
+    import inspect
+    fn = _PREDICATES.get(name)
+    if fn is None:
+        raise RegistryError(f"unknown predicate: {name!r}")
+    params = inspect.signature(fn).parameters.values()
+    if any(p.kind != inspect.Parameter.KEYWORD_ONLY for p in params):
+        raise RegistryError(f"predicate has unsupported signature: {name!r}")
+    return len(inspect.signature(fn).parameters)
+
+def dispatch(predicate, **context):
+    fn = _PREDICATES.get(predicate)
+    if fn is None:
+        raise RegistryError(f"unregistered predicate: {predicate!r}")
+    if len(context) != predicate_arity(predicate):
+        raise RegistryError(f"predicate {predicate!r} expects {predicate_arity(predicate)} arguments, got {len(context)}")
+    return fn(**context)
 
 def check(registry, name, **context):
-    rules=registry[2]
-    predicate=rules.get(name)
-    if predicate not in PREDICATES: raise RegistryError(f'unregistered or unsupported constraint: {name}')
-    return PREDICATES[predicate](**context)
+    """Compatibility facade; every invocation requires a declared rule."""
+    return registry.require(name).check(**context)

@@ -9,7 +9,7 @@ from typing import Mapping
 from gml2 import Block, parse
 from resolvers import resolve, ResolutionError
 from registry import load_registry, validate_document
-from rules import check, RuleViolation
+from rules import RuleViolation
 
 class AssemblyError(ValueError): pass
 
@@ -71,8 +71,8 @@ def parse_source(doc, registry=None):
     if data is not None:
         if not isinstance(data,Block): raise AssemblyError('data must be block')
         raw=values(data,'value')
-        check(registry,'data_count',values=raw,shape=shape)
-        check(registry,'finite_values',values=raw)
+        registry.require('data_count').check(values=raw,shape=shape)
+        registry.require('finite_values').check(values=raw)
         vals=tuple(float(x) for x in raw)
     return shape,dtype,vals
 
@@ -108,9 +108,9 @@ def assemble(doc, docs: Mapping[str,Block], materialize=False):
         src_id=graph_identity(src)
         if src_id not in source_cache: raise AssemblyError(f'not a tensor_source: {ref!r}')
         src_shape,src_dtype,src_data=source_cache[src_id]
-        check(registry,'dtype_match',source_dtype=src_dtype,assembly_dtype=dtype,source_id=src_id)
+        registry.require('dtype_match').check(source_dtype=src_dtype,assembly_dtype=dtype,source_id=src_id)
         row=integer(field(block,'row_offset'),'row_offset'); col=integer(field(block,'col_offset'),'col_offset')
-        check(registry,'bounds_check',row=row,col=col,source_shape=src_shape,target_shape=shape)
+        registry.require('bounds_check').check(row=row,col=col,source_shape=src_shape,target_shape=shape)
         prepared.append((ref,row,col,src_shape,src_data))
     if materialize:
         missing=sorted({ref for ref,_,_,_,data in prepared if data is None})
@@ -120,12 +120,12 @@ def assemble(doc, docs: Mapping[str,Block], materialize=False):
         for r in range(src_shape[0]):
             for c in range(src_shape[1]):
                 dst=(row+r,col+c)
-                check(registry,'no_overlap',destination=dst,occupied=occupied)
+                registry.require('no_overlap').check(destination=dst,occupied=occupied)
                 occupied.add(dst)
                 if materialize: out[dst[0]*shape[1]+dst[1]]=src_data[r*src_shape[1]+c]
         slices.append(Slice(ref,(row,col),src_shape,src_data))
     total=shape[0]*shape[1]
-    check(registry,'complete_coverage',coverage_policy=field(doc,'coverage_policy','complete'),occupied=occupied,total=total)
+    registry.require('complete_coverage').check(coverage_policy=field(doc,'coverage_policy','complete'),occupied=occupied,total=total)
     return Plan(gid,shape,dtype,tuple(slices),len(occupied),total), (tuple(out) if materialize else None)
 
 def load_directory(path, registry_path=None):
