@@ -32,6 +32,11 @@ def load_registry(path=None):
     missing=required-set(fields)
     if missing: raise RegistryError(f'registry missing field declarations: {sorted(missing)}')
     if set(contracts)!={'tensor_source','tensor_assembly'}: raise RegistryError('incomplete contract registry')
+    # Registry is load-bearing: unsupported field types fail at bootstrap.
+    supported={'block','enum','integer','positive_integer','nonnegative_integer','graph_uri'}
+    for (path,name),decl in fields.items():
+        if one(decl,'type') not in supported:
+            raise RegistryError(f'unsupported registry type: {path}.{name}')
     return contracts,fields
 
 def validate_document(doc,registry):
@@ -51,6 +56,8 @@ def validate_document(doc,registry):
             if one(decl,'required',0)==1 and len(vals)!=1: raise RegistryError(f'{path}.{name} required once')
             if len(vals)>1: raise RegistryError(f'{path}.{name} duplicate')
             for v in vals:
+                exact=one(decl,'required_value')
+                if exact is not None and v!=exact: raise RegistryError(f'{path}.{name} required value {exact}')
                 typ=one(decl,'type')
                 if typ=='block':
                     if not isinstance(v,Block): raise RegistryError(f'{path}.{name} must be block')
@@ -62,11 +69,19 @@ def validate_document(doc,registry):
                 elif typ=='positive_integer' and (type(v)!=int or v<=0): raise RegistryError(f'{path}.{name} positive integer required')
                 elif typ=='nonnegative_integer' and (type(v)!=int or v<0): raise RegistryError(f'{path}.{name} nonnegative integer required')
                 elif typ=='graph_uri' and (not isinstance(v,str) or not v.startswith('gml://')): raise RegistryError(f'{path}.{name} graph URI required')
+        # Reject unregistered extension fields, rather than silently interpreting them.
+        allowed={name for (fpath,name) in fields if fpath==path}
+        for attr in b.entries:
+            if attr.name not in allowed:
+                raise RegistryError(f'unregistered field: {path}.{attr.name}')
         if path=='tensor':
             sh=one(b,'shape')
             if isinstance(sh,Block):
-                for (fpath,name),decl in fields.items():
-                    if fpath!='tensor.shape': continue
+                nested={name:decl for (fpath,name),decl in fields.items() if fpath=='tensor.shape'}
+                for attr in sh.entries:
+                    if attr.name not in nested: raise RegistryError(f'unregistered field: tensor.shape.{attr.name}')
+                for name,decl in nested.items():
                     v=one(sh,name)
-                    if type(v)!=int or v<=0: raise RegistryError(f'tensor.shape.{name} positive integer required')
+                    if one(decl,'required',0)==1 and v is None: raise RegistryError(f'tensor.shape.{name} required')
+                    if v is not None and (type(v)!=int or v<=0): raise RegistryError(f'tensor.shape.{name} positive integer required')
     return True

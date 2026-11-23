@@ -83,6 +83,7 @@ def resolve_ref(ref, docs):
 def assemble(doc, docs: Mapping[str,Block], materialize=False):
     if field(doc,'schema')!='gml-tensor/1' or field(doc,'contract')!='tensor_assembly':
         raise AssemblyError('assembly must declare gml-tensor/1 tensor_assembly')
+    validate_document(doc, load_registry())
     gid=graph_identity(doc)
     t=field(doc,'tensor')
     if not isinstance(t,Block) or field(t,'rank')!=2: raise AssemblyError('rank-2 tensor required')

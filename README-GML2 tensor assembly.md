@@ -38,3 +38,7 @@ This is a rank-2, float32, row-major assembly **prototype**. It does not impleme
 - Rank 2, row-major float32 remain the only supported assembly layout. No kernel execution or XCFE admission.
 
 Run: `python -m unittest discover -s tests -v` from this package directory.
+
+
+## v3 registry enforcement
+The bootstrap registry now rejects unknown tensor, shape, and slice attributes, unsupported field types, and rank values other than the registry-declared `required_value 2`. `assemble()` checks the registered assembly fields even for direct callers. The parser and original graph fixtures remain unchanged. This is still a bounded bootstrap registry, not general-purpose self-hosting or XCFE admission.

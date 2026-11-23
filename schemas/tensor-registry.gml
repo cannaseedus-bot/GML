@@ -4,7 +4,7 @@ graph [
   extension [ schema_id "gml-tensor/1" owner "gml.tensor" ]
   contract [ name "tensor_source" required "graph_id" required "tensor" ]
   contract [ name "tensor_assembly" required "graph_id" required "tensor" required "slice" ]
-  field [ path "tensor" name "rank" type "integer" required 1 ]
+  field [ path "tensor" name "rank" type "integer" required_value 2 required 1 ]
   field [ path "tensor" name "shape" type "block" required 1 required_fields "rows,cols" ]
   field [ path "tensor.shape" name "rows" type "positive_integer" required 1 ]
   field [ path "tensor.shape" name "cols" type "positive_integer" required 1 ]

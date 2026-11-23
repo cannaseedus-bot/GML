@@ -22,7 +22,7 @@ class TestAssembly(unittest.TestCase):
         with self.assertRaisesRegex(AssemblyError,'gml://tensor/col_a'): assemble(self.root,docs,True)
     def test_unsupported_dtype(self):
         x=serialize(self.root).replace('dtype "float32"','dtype "float64"')
-        with self.assertRaisesRegex(AssemblyError,'unsupported dtype/layout'): assemble(parse(x),self.docs)
+        with self.assertRaisesRegex(RegistryError,'tensor.dtype enum mismatch'): assemble(parse(x),self.docs)
     def test_dtype_mismatch(self):
         from unittest.mock import patch
         from assemble import parse_source
@@ -74,5 +74,5 @@ class TestAssembly(unittest.TestCase):
         with self.assertRaisesRegex(AssemblyError,'overlap'): assemble(parse(x),self.docs)
     def test_rank(self):
         x=serialize(self.root).replace('rank 2','rank 3')
-        with self.assertRaisesRegex(AssemblyError,'rank-2'): assemble(parse(x),self.docs)
+        with self.assertRaisesRegex(RegistryError,'tensor.rank required value 2'): assemble(parse(x),self.docs)
 if __name__=='__main__': unittest.main()
